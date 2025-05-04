@@ -1,30 +1,16 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { QuizComponent } from './component/quiz/quiz.component';
-import { Quiz, UserAnswer } from './Models/quiz';
-import { QuizService } from './Services/quiz.service';
+// quiz.component.ts
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Quiz, UserAnswer } from '../../Models/quiz';
+import { QuizService } from '../../Services/quiz.service';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    QuizComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule
-  ],
-  providers: [
-    provideClientHydration()
-  ],
-  bootstrap: [AppComponent]
+@Component({
+  selector: 'app-quiz',
+  templateUrl: './quiz.component.html',
+  styleUrls: ['./quiz.component.css'],
 })
-export class AppModule { quizId!: number;
+export class QuizComponent implements OnInit {
+  quizId!: number;
   userName!: string;
   quiz!: Quiz;
   currentQuestionIndex = 0;
@@ -150,4 +136,5 @@ export class AppModule { quizId!: number;
   
     // Optionally, you can reset other state variables as needed
     this.isSubmitted = false;
-  }}
+  }
+}

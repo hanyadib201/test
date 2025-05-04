@@ -1,0 +1,97 @@
+<!-- quiz.component.html -->
+
+
+<form (ngSubmit)="submitQuiz()">
+    <div class="quiz-container" *ngIf="quiz">
+      <div>      <img [src]="quiz.imagePath" style="width: 100%; height: auto">
+      </div>
+      <div class="quiz-header">
+        <h1 style="text-align: center; color: purple;">{{ quiz.title }}</h1>
+        <h3 style="text-align: center;color: rgb(54, 139, 139);">{{ quiz.description }}</h3>
+        <p style="text-align: center;color: rgb(228, 8, 173);font-size:small;">متاح من {{ quiz.from | date:'dd/MM/yyyy, h:mm a' }} إلى {{ quiz.to | date:'dd/MM/yyyy, h:mm a' }}</p>
+  
+        <!-- <p>Available from {{ quiz.from | date:'medium' }} to {{ quiz.to | date:'medium' }}</p> -->
+      </div>
+  
+      <div *ngIf="!isSubmitted" class="question-section">
+        <div class="question-container" *ngIf="quiz.questions[currentQuestionIndex] as question">
+          <div class="question-header">
+            <h3>Question {{ currentQuestionIndex + 1 }} of {{ quiz.questions.length }}</h3>
+            <p>{{ question.text }}</p>
+          </div>
+  
+          <!-- True/False Question -->
+          <div *ngIf="question.type === 'true-false'" class="options">
+            <label>
+              <input type="radio" [name]="'q' + question.id" value="true" [(ngModel)]="userAnswers[question.id]">
+              صحيح
+            </label>
+            <label>
+              <input type="radio" [name]="'q' + question.id" value="false" [(ngModel)]="userAnswers[question.id]">
+              خطأ
+            </label>
+          </div>
+  
+          <!-- Fill in the Blank Question -->
+          <div *ngIf="question.type === 'fill-blank'" class="fill-blank">
+            <input type="text" [(ngModel)]="userAnswers[question.id]" [name]="'q' + question.id"
+              placeholder="اكتب الإجابة هنا...">
+          </div>
+  
+          <!-- Multiple Choice Question -->
+          <div *ngIf="question.type === 'multiple-choice' " class="options">
+            <div *ngFor="let option of question.options" class="option">
+              <label>
+                <input type="radio" [name]="'q' + question.id" [value]="option.text"
+                  [(ngModel)]="userAnswers[question.id]">
+                {{ option.text }}
+              </label>
+            </div>
+          </div>
+  
+          <!-- Matching Question -->
+          <!-- <div *ngIf="question.type === 'matching'" class="matching">
+            <div *ngFor="let leftItem of question.options?.[0]?.leftItem; let i = index" class="match-pair">
+              <span class="left-item">{{ leftItem }}</span>
+              <select [(ngModel)]="userAnswers[question.id][i]" [name]="'match-' + question.id + '-' + i">
+                <option value="">اختر الإجابة</option>
+                <option *ngFor="let rightItem of question.options?.[0]?.rightItem" [value]="rightItem">
+                  {{ rightItem }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>  -->
+  
+          <div *ngIf="question.type === 'matching'" class="matching">
+            <div *ngFor="let leftItem of question.options?.[0]?.leftItem; let i = index" class="match-pair">
+              <span class="left-item">{{ leftItem }}</span>
+              <select [(ngModel)]="userAnswers[question.id][i]" [name]="'match-' + question.id + '-' + i">
+                <option value="">اختر الإجابة</option>
+                <option *ngFor="let rightItem of question.options?.[0]?.rightItem" [value]="rightItem">
+                  {{ rightItem }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+  
+  
+  
+  
+        <div class="navigation">
+          <button (click)="prevQuestion()" [disabled]="currentQuestionIndex === 0" type="button">السابق</button>
+          <button *ngIf="currentQuestionIndex < quiz.questions.length - 1" (click)="nextQuestion()"
+            type="button">التالي</button>
+          <button *ngIf="currentQuestionIndex === quiz.questions.length - 1" (click)="submitQuiz()">إرسال
+            الإجابات</button>
+        </div>
+      </div>
+  
+  
+    </div>
+  </form>
+  
+  <div *ngIf="!quiz" class="loading">
+    جاري تحميل الاختبار...
+  </div>
